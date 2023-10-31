@@ -9,27 +9,24 @@ FROM Person;
 
 SELECT P.firstname, P.lastname, K.name
 FROM Person AS P
-JOIN Kingdom AS K ON P.kingdom_id = K.id
-WHERE P.kingdom_id IS NOT NULL;
+INNER JOIN Kingdom AS K ON P.kingdom_id = K.id;
 
 -- La même chose en incluant tous les personnages
 
 SELECT P.firstname, P.lastname, K.name
 FROM Person AS P
-LEFT JOIN Kingdom AS K ON P.kingdom_id = K.id
-WHERE P.kingdom_id IS NOT NULL;
+LEFT JOIN Kingdom AS K ON P.kingdom_id = K.id;
 
 -- La moyenne de l’âge des personnages
 
-SELECT AVG(age) AS moyenne_age 
+SELECT ROUND(AVG(age)) AS moyenne_age 
 FROM Person;
 
 -- La moyenne d'âge de tous les personnages n’ayant pas le rôle de magicien
 
-SELECT AVG(P.age) AS moyenne_age
+SELECT ROUND(AVG(P.age)) AS moyenne_age
 FROM Person P
-JOIN Role R ON P.role_id = R.id
-WHERE R.id = 1 OR R.id = 2;
+WHERE Role_id = 1 OR Role_id = 2;
 
 -- Le nombre de personnage par royaume (inclure les royaumes n’ayant pas de personnage)
 
@@ -40,14 +37,14 @@ GROUP BY K.id;
 
 -- La moyenne de l’âge par rôle
 
-SELECT R.role, AVG(age) AS moyenne_age
+SELECT R.role, ROUND(AVG(age)) AS moyenne_age
 FROM Person P 
-JOIN Role R ON P.role_id = r.id
+INNER JOIN Role R ON P.role_id = r.id
 GROUP BY R.role;
 
 -- La liste de tous les personnages avec leur rôle et royaume éventuels
 
-SELECT CONCAT(P.firstname, ' ', P.lastname) AS full_name, R.role, K.name
+SELECT P.firstname, P.lastname, R.role, K.name
 FROM Person P
 LEFT JOIN Role R ON P.role_id = R.id
 LEFT JOIN Kingdom K ON P.kingdom_id = K.id;
@@ -56,6 +53,6 @@ LEFT JOIN Kingdom K ON P.kingdom_id = K.id;
 
 SELECT K.name AS kingdom_name, COUNT(P.id) AS nb_person
 FROM Kingdom K
-JOIN Person P ON K.id = P.kingdom_id
+INNER JOIN Person P ON K.id = P.kingdom_id
 GROUP BY K.name
 HAVING COUNT(P.id) >=2;
